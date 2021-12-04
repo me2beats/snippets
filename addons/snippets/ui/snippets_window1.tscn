@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/snippets/ui/window/window.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/snippets/ui/snippets2.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/snippets/ui/snippets_panel.tres" type="StyleBox" id=3]
+[ext_resource path="res://addons/snippets/ui/components/hide_group_on_click_outside.tres" type="Resource" id=4]
+[ext_resource path="res://addons/snippets/ui/snippets_window_bhvs.gd" type="Script" id=5]
+[ext_resource path="res://addons/snippets/api.gd" type="Script" id=6]
+[ext_resource path="res://addons/snippets/ui/components/menu_button_popup_to_group.tscn" type="PackedScene" id=7]
+
+[sub_resource type="Resource" id=1]
+resource_local_to_scene = true
+script = ExtResource( 6 )
+ui_window_rect = Rect2( 335, 404, 468, 751 )
+
+[node name="Window" groups=["snippets_hideable"] instance=ExtResource( 1 )]
+visible = false
+hint_tooltip = "this is inherited"
+Api = SubResource( 1 )
+components = [ ExtResource( 4 ) ]
+
+[node name="snippets_window_bhvs" type="Node" parent="." index="0"]
+script = ExtResource( 5 )
+snippets_path = NodePath("../Panel/YourContent/Snippets")
+
+[node name="Panel" parent="." index="1"]
+custom_styles/panel = ExtResource( 3 )
+
+[node name="YourContent" parent="Panel" index="0"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 468.0
+margin_bottom = 751.0
+
+[node name="HBoxContainer" parent="Panel/YourContent" index="0" groups=["snippets_mouse_released"]]
+margin_right = 468.0
+
+[node name="Head" parent="Panel/YourContent/HBoxContainer" index="0"]
+margin_right = 468.0
+
+[node name="Snippets" parent="Panel/YourContent" index="1" instance=ExtResource( 2 )]
+margin_top = 34.0
+margin_right = 468.0
+margin_bottom = 751.0
+
+[node name="HBoxContainer" parent="Panel/YourContent/Snippets" index="0"]
+margin_right = 468.0
+
+[node name="Filter" parent="Panel/YourContent/Snippets/HBoxContainer" index="0"]
+margin_right = 444.0
+
+[node name="SnippetsOptions" parent="Panel/YourContent/Snippets/HBoxContainer" index="1"]
+margin_left = 444.0
+margin_right = 468.0
+items = [ "Toggle preview", null, 1, false, false, 0, 0, null, "", false, "Toggle window head", null, 1, false, false, 1, 0, null, "", false ]
+
+[node name="MenuButtonPopupToGroup" parent="Panel/YourContent/Snippets/HBoxContainer/SnippetsOptions" index="1" instance=ExtResource( 7 )]
+group = "snippets_popups"
+
+[node name="ItemList" parent="Panel/YourContent/Snippets" index="1"]
+margin_right = 468.0
+margin_bottom = 689.0
+
+[node name="ContextMenu" parent="Panel/YourContent/Snippets/ItemList" index="7" groups=["snippets_popups"]]
+items = [ "Remove", null, 0, false, false, 0, 0, null, "", false, "Edit - Not implemented", null, 0, false, false, 1, 0, null, "", false ]
+
+[node name="PanelContainer" parent="Panel/YourContent/Snippets" index="2"]
+margin_top = 689.0
+margin_right = 468.0
+margin_bottom = 717.0
+
+[node name="TopBar" parent="Panel/YourContent/Snippets/PanelContainer" index="0"]
+margin_right = 464.0
+
+[node name="More" parent="Panel/YourContent/Snippets/PanelContainer/TopBar" index="1"]
+items = [ "Add From Clipboard", null, 0, false, false, 0, 0, null, "", false, "----", null, 0, false, false, 1, 0, null, "", true, "not implemented", null, 0, false, false, 2, 0, null, "", false ]
+
+[node name="MenuButtonPopupToGroup" parent="Panel/YourContent/Snippets/PanelContainer/TopBar/More" index="2" instance=ExtResource( 7 )]
+group = "snippets_popups"
+
+[connection signal="close_pressed" from="." to="snippets_window_bhvs" method="_on_Window_close_pressed"]
+[connection signal="head_released" from="." to="snippets_window_bhvs" method="_on_head_released"]
+[connection signal="visibility_changed" from="." to="snippets_window_bhvs" method="_on_Window_visibility_changed"]
+
+[editable path="Panel/YourContent/Snippets"]

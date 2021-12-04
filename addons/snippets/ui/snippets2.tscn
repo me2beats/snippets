@@ -1,0 +1,126 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://addons/snippets/ui/snippets.tres" type="StyleBox" id=1]
+[ext_resource path="res://addons/snippets/ui/components/custom_tooltip_requested.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/snippets/ui/add_snippet_dialog.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/snippets/ui/add_from_editor.gd" type="Script" id=4]
+[ext_resource path="res://addons/snippets/ui/item_list.gd" type="Script" id=5]
+[ext_resource path="res://addons/snippets/ui/snippets.gd" type="Script" id=6]
+[ext_resource path="res://addons/snippets/ui/top_bar_more.gd" type="Script" id=7]
+[ext_resource path="res://addons/snippets/ui/filter.gd" type="Script" id=8]
+[ext_resource path="res://addons/snippets/ui/snippets_options.gd" type="Script" id=9]
+
+[node name="Snippets" type="VBoxContainer"]
+margin_top = -1.0
+margin_right = 114.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+item_list_path = NodePath("ItemList")
+filter_path = NodePath("HBoxContainer/Filter")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 114.0
+margin_bottom = 22.0
+custom_constants/separation = 0
+
+[node name="Filter" type="LineEdit" parent="HBoxContainer"]
+margin_right = 90.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+custom_styles/focus = ExtResource( 1 )
+custom_styles/normal = ExtResource( 1 )
+script = ExtResource( 8 )
+
+[node name="SnippetsOptions" type="MenuButton" parent="HBoxContainer"]
+margin_left = 90.0
+margin_right = 114.0
+margin_bottom = 22.0
+text = "..."
+items = [ "Toggle preview - Not impl", null, 1, false, false, 0, 0, null, "", false, "Toggle window head", null, 1, false, false, 1, 0, null, "", false ]
+script = ExtResource( 9 )
+
+[node name="ItemList" type="Tree" parent="."]
+margin_top = 22.0
+margin_right = 114.0
+margin_bottom = 573.0
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath(".")
+focus_neighbour_right = NodePath(".")
+focus_neighbour_bottom = NodePath(".")
+focus_next = NodePath(".")
+focus_previous = NodePath(".")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 0
+custom_styles/bg = ExtResource( 1 )
+allow_reselect = true
+allow_rmb_select = true
+hide_folding = true
+hide_root = true
+select_mode = 1
+script = ExtResource( 5 )
+
+[node name="CustomTooltipRequested" parent="ItemList" instance=ExtResource( 2 )]
+wait_time = 0.3
+
+[node name="ContextMenu" type="PopupMenu" parent="ItemList"]
+modulate = Color( 1, 1, 1, 0.87451 )
+margin_right = 20.0
+margin_bottom = 20.0
+items = [ "Remove", null, 0, false, false, 0, 0, null, "", false, "Edit", null, 0, false, false, 1, 0, null, "", false ]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+margin_top = 573.0
+margin_right = 114.0
+margin_bottom = 601.0
+custom_styles/panel = ExtResource( 1 )
+
+[node name="TopBar" type="HBoxContainer" parent="PanelContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 110.0
+margin_bottom = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddFromEditor" type="Button" parent="PanelContainer/TopBar"]
+margin_right = 49.0
+margin_bottom = 20.0
+hint_tooltip = "Add a snippet from ScriptEditor selection"
+text = "+ Add"
+script = ExtResource( 4 )
+
+[node name="Dialog" parent="PanelContainer/TopBar/AddFromEditor" instance=ExtResource( 3 )]
+
+[node name="More" type="MenuButton" parent="PanelContainer/TopBar"]
+margin_left = 53.0
+margin_right = 77.0
+margin_bottom = 20.0
+text = "..."
+flat = false
+items = [ "Add From Clipboard", null, 0, false, false, 0, 0, null, "", false, "----", null, 0, false, false, 1, 0, null, "", true, "columns", null, 0, false, false, 2, 0, null, "", false ]
+script = ExtResource( 7 )
+
+[node name="Dialog" parent="PanelContainer/TopBar/More" instance=ExtResource( 3 )]
+visible = false
+
+[connection signal="text_changed" from="HBoxContainer/Filter" to="HBoxContainer/Filter" method="_on_text_changed"]
+[connection signal="item_activated" from="ItemList" to="ItemList" method="_on_item_activated"]
+[connection signal="item_rmb_selected" from="ItemList" to="ItemList" method="_on_item_rmb_selected"]
+[connection signal="item_selected" from="ItemList" to="ItemList" method="_on_item_selected"]
+[connection signal="multi_selected" from="ItemList" to="ItemList" method="_on_multi_selected"]
+[connection signal="nothing_selected" from="ItemList" to="ItemList" method="_on_nothing_selected"]
+[connection signal="custom_tooltip_requested" from="ItemList/CustomTooltipRequested" to="ItemList" method="_on_custom_tooltip_requested"]
+[connection signal="index_pressed" from="ItemList/ContextMenu" to="ItemList" method="_on_ContextMenu_index_pressed"]
+[connection signal="confirmed" from="PanelContainer/TopBar/AddFromEditor/Dialog" to="PanelContainer/TopBar/AddFromEditor" method="_on_confirmed"]
+[connection signal="confirmed" from="PanelContainer/TopBar/More/Dialog" to="PanelContainer/TopBar/More" method="_on_confirmed"]

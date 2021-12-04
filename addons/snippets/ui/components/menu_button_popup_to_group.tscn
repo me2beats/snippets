@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/snippets/ui/components/menu_button_popup_to_group.gd" type="Script" id=1]
+
+[node name="MenuButtonPopupToGroup" type="Node"]
+script = ExtResource( 1 )

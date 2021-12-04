@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/snippets/ui/components/hide_group_on_click_outside.gd" type="Script" id=1]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource( 1 )
+exception_groups = [ "snippets_hideable", "snippets_popups" ]
+group_to_hide = "snippets_hideable"
+margin = 8
